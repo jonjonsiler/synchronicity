@@ -1,0 +1,55 @@
+body {
+    font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+    font-size: 100%;
+    background: #333;
+    margin:0;
+    padding: 20px;
+    }
+    .btn {
+        background-color:dimgrey;
+        width: 35px;
+        height: 35px;
+        border: none;
+        border-radius: 50%;
+        overflow: hidden;
+        text-indent: -9999em;
+    }
+    .trackers{
+        width: 200px;
+        margin: 0;
+        padding: 0;
+    }
+    .tracker{
+        position: relative;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 3px;
+        background-color: darkslategray;
+        color: white;
+        padding: 10px;
+        margin: 3px
+    }
+    .tracker .title {
+
+    }
+
+    .action {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 35px;
+        height: 35px;
+        background-color:chocolate;
+    }
+    .action:hover {
+        background-color: cornflowerblue;
+    }
+    .start{
+
+    }
+    .pause{
+
+    }

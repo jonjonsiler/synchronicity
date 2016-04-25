@@ -1,0 +1,41 @@
+{
+    "name":"Synchronicity",
+    "version":"0.1",
+    "description":"A testing extension to understand the API framework for interaction with base webRequest level",
+    "manifest_version": 2,
+    "incognito": "spanning",
+    "browser_action": {
+        "default_popup": "tracker.html"
+    },
+    "content_scripts":[{
+        "all_frames": true,
+        "css": [
+            "css/style.css"
+        ],
+        "js": [
+            "js/jquery-2.2.2.min.js",
+            "js/Synchronicity.js"
+        ],
+        "run_at":"document_start",
+        "matches": [
+            "*://*.baktraq.com/*"
+        ]
+    }],
+    "web_accessible_resources": [
+        "css/style.css"
+    ],
+//    "page_action":{
+//        "default_title": "Synchronicity"
+//    },
+    "permissions": [
+        "webRequest",
+        "webRequestBlocking",
+        "*://*.baktraq.com/*"
+    ],
+    "background": {
+        "scripts": [
+            "js/Synchronicity.js",
+            "background.js"
+        ]
+    }
+}
