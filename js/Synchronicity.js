@@ -18,22 +18,39 @@ var Trackers = {
 
 var Synchronicity = {};
 
+Synchronicity.trackers = {
+    "f723bf766822": {
+        "title":"Tracker 1",
+        "time": 0
+    },
+    "c6800efd7a02": {
+        "title":"Tracker 2",
+        "time": 16
+    },
+    "9016d78acc5b": {
+        "title": "tracker #3",
+        time: 0,
+    }
+    
+    
+};
+
 Synchronicity.init = function(){
-console.log("Synchronicity Loaded!");
+    console.log("Synchronicity Loaded!");
     //this.bindActions();
 };
 
 Synchronicity.tracker = {
     getTrackers: function(){
-        return Trackers;
+        return Synchronicity.trackers;
     },
     
     getTracker: function(id){
-     return Trackers[id];
+        return Synchronicity.trackers[id];
     },
 
     addTracker: function(id, data){
-        Trackers[id] = data;
+        Synchronicity.trackers[id] = data;
     }
 };
 
