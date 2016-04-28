@@ -43,21 +43,50 @@ Tracker.timer = {
     }
 };
 
+/**
+ * Request Trackers from background page
+ */
 Tracker.getTrackers = function(){
     var self = this;
-    chrome.runtime.sendMessage({handler:"tracker", event:"getTrackers"}, function(response){
-            //if data is returned in the response return it to the caller
-//        console.log(response);    
+    chrome.runtime.sendMessage({handler:"tracker", event:"all"}, function(response){
+        //if data is returned in the response return it to the caller   
         for (var key in response){
-                if (!response.hasOwnProperty(key)) continue;
-                self.create(key,response[key]);
-            }
+            if (!response.hasOwnProperty(key)) continue;
+            self.create(key,response[key]);
+        }
     });    
 };
 
+Tracker.updateTracker = function(id){
+    var self = this;
+    // Create the tracker remotely
+    chrome.runtime.sendMessage({handler:"tracker", event:"update", }, function(response){
+        //if data is returned in the response return it to the caller   
+        for (var key in response){
+            if (!response.hasOwnProperty(key)) continue;
+            
+            // Build the UI for the tracker
+            self.create(key,response[key]);
+        }
+    });    
+};
+
+Tracker.addTracker = function(){
+    var self = this;
+    // Create the tracker remotely
+    chrome.runtime.sendMessage({handler:"tracker", event:"add"}, function(response){
+        //if data is returned in the response return it to the caller   
+        for (var key in response){
+            if (!response.hasOwnProperty(key)) continue;
+            
+            // Build the UI for the tracker
+            self.create(key,response[key]);
+        }
+    });    
+};
 
 /**
- * Create the trackers to be displayed - pulled from background page
+ * Create the trackers to be displayed
  */
 Tracker.create = function(id, el){
     var self = this;
@@ -73,33 +102,45 @@ Tracker.create = function(id, el){
  */
 Tracker.bindActions = function(){
     var self = this;
-    $("#trackers").on('click', ".action", function(e,a){
-        console.log("Action Clicked!");
-        a = $(this);
+    $("#trackers")
+        // Bind to action buttons
+        .on('click', ".action", function(e,a,t){
+            console.log("Action Clicked!");
+            e.preventDefault();
+            a = $(this);
 
-        //Stop current timer
-        time = self.timer.stop();
+            //Stop current timer - Get seconds
+            t = self.timer.stop();
 
-        //Save current time from timer - if running
-        $(".pause").prev().data("time", time);
-        if(a.hasClass("pause")) {
-            a.removeClass("pause").addClass("start");            
-        }
-        
-        //Check action to determine behavior
-        if(a.hasClass("start")) {
-            // Set active timer
-            
-            // Update the UI
-            a.removeClass("start").addClass("pause");
+            //Save current time from timer - if running
+            $(".pause").prev().data("time", t);
+            if(a.hasClass("pause")) {
+                a.removeClass("pause").addClass("start");            
+            }
 
-            //Move triggered tracker to top of list
-            var t = a.parents(".tracker").detach().prependTo("#trackers");
-        
-            //Start timer/Load new trackers time
-            self.timer.start(a.prev().data("time"));
-        }
-    });
+            //Check action to determine behavior
+            if(a.hasClass("start")) {
+                // Set active timer
+
+                // Update the UI
+                a.removeClass("start").addClass("pause");
+
+                //Move triggered tracker to top of list
+                a.parents(".tracker").detach().prependTo("#trackers");
+
+                //Start timer/Load new trackers time
+                self.timer.start(a.prev().data("time"));
+            }
+        }).on("click", ".title", function(e,t){
+            //Unbind click temporarily
+            t = $(this).html();
+            $(this).html($('<input/>').attr({"type":"text", "value":t}));
+        });
+      $(".btn-add")
+          .on("click", function(e,a){
+                e.preventDefault();
+                self.addTracker();
+            });
 };
 
 

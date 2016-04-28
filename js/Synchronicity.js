@@ -1,21 +1,3 @@
-var Trackers = {
-    "f723bf766822": {
-        "title":"Tracker 1",
-        "time": 0
-    },
-    "c6800efd7a02": {
-        "title":"Tracker 2",
-        "time": 16
-    },
-    "9016d78acc5b": {
-        "title": "tracker #3",
-        time: 0,
-    }
-    
-    
-};
-
-
 var Synchronicity = {};
 
 Synchronicity.trackers = {
@@ -29,7 +11,7 @@ Synchronicity.trackers = {
     },
     "9016d78acc5b": {
         "title": "tracker #3",
-        time: 0,
+        time: 3,
     }
     
     
@@ -41,16 +23,23 @@ Synchronicity.init = function(){
 };
 
 Synchronicity.tracker = {
-    getTrackers: function(){
+    all: function(){
         return Synchronicity.trackers;
     },
     
-    getTracker: function(id){
+    get: function(id){
         return Synchronicity.trackers[id];
     },
 
-    addTracker: function(id, data){
+    add: function(){
+        id = Synchronicity.hash();
+        data = {"title":"Add Title", "time":0};
         Synchronicity.trackers[id] = data;
+        return {id: Synchronicity.trackers[id]};
+    },
+
+    update: function(data){
+        Synchronicity.trackers[data.id] = {"title": data.title, "time": data.time};
     }
 };
 
