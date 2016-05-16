@@ -10,14 +10,12 @@ Synchronicity.trackers = {
     },
     "c6800efd7a02": {
         "title":"Tracker 2",
-        "time": 16
+        "time": 2300
     },
     "9016d78acc5b": {
         "title": "tracker #3",
-        "time": 3,
+        "time": 4865,
     }
-    
-    
 };
 
 
@@ -103,9 +101,9 @@ Synchronicity.tracker = {
                 "message": "Tracker does not exist!"
             };
         }
-        if(data.hasOwnProperty("title")) Synchronicity.trackers[data.id].title = data.title;
-        if(data.hasOwnProperty("time")) Synchronicity.trackers[data.id].time = data.time
-        Synchronicity.trackers[data.id] = {"title": data.title, "time": data.time};
+        //console.log(data);
+        if(data.title) Synchronicity.trackers[data.id].title = data.title;
+        if(data.time) Synchronicity.trackers[data.id].time = data.time
         response.status = "success";
         response.data = {};
         response.data[data.id] = Synchronicity.trackers[data.id];
@@ -121,9 +119,22 @@ Synchronicity.hash = function(){
 };
 
 Synchronicity.timer = {
+    active: false,
+    activeId: null,
     time: 0, // in seconds
-    start: function(id, t){
-        this.time = (!t)?0:parseInt(t);
+    start: function(data){
+        var t = !data.time?0:data.time,
+            id = !data.id?0:data.id;
+
+        // Stop any active trackers and record the time
+        if(this.active) this.stop();
+
+        // If time is not sent in the request, use the tracker's "current" time
+        this.time = (!data.time)?Synchronicity.trackers[id].time:parseInt(data.time); // Prime the time
+        this.active = true; // Set timer to active
+        this.activeId = id; //Set the active id of the active tracker
+        
+        // Set an internal interval to increment the time every second.
         this.interval = setInterval((function(){
             ++this.time;
         }).bind(this), 1000);
@@ -132,9 +143,22 @@ Synchronicity.timer = {
         return null;
     },
     stop: function(){
-        if(!this.interval) clearInterval(this.interval);
+        if(this.interval) {
+            clearInterval(this.interval); // Reset Interval
+            Synchronicity.trackers[this.activeId].time = this.time; // Save time
+        }
+        this.active = false;
+        this.activeId = null;
         console.log("Timer Stopped: "+this.time);
         return {"time":this.time};
+    },
+    status: function(){
+        console.log('status requested');
+        return {
+            "active":     this.active,
+            "activeId":   this.activeId,
+            "time":       this.time
+        };
     }
 };
 
